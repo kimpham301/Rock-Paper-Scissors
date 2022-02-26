@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>Rock Paper Scissor!</title>
+</head>
+<body>
+    <div class='container-fluid mb-4 mt-4'>
+        <h1 class='text-center'>!!! ROCK PAPER SCISSORS !!!</h1>
+    </div>
+    
+    <div class='container' id='buttons'>
+        <div class='row justify-content-center'>
+            <div class='col-2'>
+                <button class='btn btn-primary' value='Rock'>Rock</button>
+            </div>
+            <div class='col-2'>
+                <button class='btn btn-primary' value='Paper'>Paper</button>
+            </div>
+            <div class='col-2'>
+                <button class='btn btn-primary' value='Scissors'>Scissors</button>
+            </div>
+        </div>
+    </div>
+    <div class='container mt-5 shadow p-3 mb-5 bg-white rounded' id='gameContainer'>
+        <div class='row justify-content-center mb-3'>
+            <h5 id='winnerStr'></h5>
+        </div>
+        <div class='row justify-content-center'>
+            <div class='col-4 text-center'>
+                <p><b>Current Score</b></p>
+            </div>
+        </div>
+        <div class='row justify-content-center'>
+            <div class='col-4 text-center'>
+                <p>You</p>
+            </div>            
+            <div class='col-4 text-center'>
+                <p>Computer</p>
+            </div>
+        </div>
+        <div class='row justify-content-center'>
+            <div class='col-4 text-center'>
+                <p id='playerScore'></p>
+            </div>            
+            <div class='col-4 text-center'>
+                <p id='computerScore'></p>
+            </div>
+        </div>
+        <div class='row justify-content-center mb-3'>
+            <button class='btn btn-secondary' value='restart'>Restart</button>
+        </div>
+<script>
+    const choices = ['Paper', 'Rock', 'Scissors'];
+let computerPoints = 0;
+let playerPoints = 0;
+let outcome;
+
+
+document.querySelectorAll('button').forEach(button => {
+  button.addEventListener('click', onClickEvent);
+});
+
+
+function onClickEvent(e) {
+
+    const value = e.target.value;
+    const gameContainer = document.querySelector('#gameContainer');
+    const winnerStr = document.querySelector('#winnerStr');
+    const playerScoreDiv = document.querySelector('#playerScore');
+    const computerScoreDiv = document.querySelector('#computerScore');
+
+    if (choices.indexOf(value) !== -1) {
+
+        gameContainer.style.visibility = 'visible';
+        outcome = playRound(value, computerPlay())
+
+        if (outcome.outcome !== 't') {
+            if (outcome.outcome === 'p') {
+                playerPoints++; 
+            }
+            else {
+                computerPoints++;
+            }
+        } 
+    }
+
+
+    else if (value === 'restart') {
+        
+        playerPoints = 0;
+        computerPoints = 0;
+        winnerStr.textContent = ''
+        
+    }
+
+    playerScoreDiv.innerHTML = playerPoints;
+    computerScoreDiv.innerHTML = computerPoints;
+    winnerStr.textContent = outcome.winnerStr;
+
+
+    /* adjusted to restart button
+    if (playerPoints === 5 || computerPoints === 5) {
+        const winner = playerPoints > computerPoints ? 'win' : 'lose';
+        div.innerHTML = `<br><br>You ${winner}! ${playerPoints} : ${computerPoints}`
+        playerPoints = 0;
+        computerPoints = 0;
+    }
+    */
+
+}
+
+
+
+function computerPlay() {
+    
+    const randomNum = Math.floor(Math.random() * choices.length);
+    return choices[randomNum];
+}
+
+function playRound(playerSelection, computerSelection) {
+
+    const playerSelectionIndex = choices.indexOf(playerSelection);
+    const computerSelectionIndex = choices.indexOf(computerSelection);
+
+    const outcomes = [
+        ['t', 'c', 'p'],
+        ['p', 't', 'c'],
+        ['c', 'p', 't']
+    ];
+
+    const outcomeMap = {
+        't': `It's a tie! You both selected ${playerSelection}`,
+        'c': `You Lose! ${computerSelection} beats ${playerSelection}`,
+        'p': `You Win! ${playerSelection} beats ${computerSelection}`
+    };
+
+    const outcome = outcomes[playerSelectionIndex][computerSelectionIndex];
+    
+    return {
+        'outcome': outcome,
+        'winnerStr': outcomeMap[outcome]
+        };
+}
+
+function game() {
+
+    const numRounds = 5;
+    
+    var computerPoints = 0;
+    var playerPoints = 0;
+
+    for (let i = 0; i < numRounds; i++) {
+
+        let playerSelection;
+
+        while (choices.indexOf(playerSelection) === -1) {
+            playerSelection = prompt('Select a move (type rock, paper or scissors): ');
+        }
+        
+        const computerSelection = computerPlay();
+
+        const result = playRound(playerSelection, computerSelection);
+        console.log(result.winnerStr)
+        const outcome = result.outcome;
+
+        if (outcome !== 't') {
+            if (outcome === 'p') {
+                playerPoints++; 
+            }
+            else {
+                computerPoints++;
+            }
+        }
+    }
+
+    if (playerPoints > computerPoints) {
+        alert(`P${playerPoints} : C${computerPoints} - You Win!`)
+    }
+    else if (playerPoints < computerPoints) {
+        alert(`P${playerPoints} : C${computerPoints} - You Lose!`)
+    }
+    else {
+        alert("It's a tie!")
+    }
+
+}
+
+</script>
+</body>
+</html>
