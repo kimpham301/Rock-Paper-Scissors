@@ -3,9 +3,10 @@ let computerPoints = 0;
 let playerPoints = 0;
 let outcome;
 
-
+$(document).ready(function(){
 document.querySelectorAll('button').forEach(button => {
   button.addEventListener('click', onClickEvent);
+});
 });
 
 
